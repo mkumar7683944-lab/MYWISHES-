@@ -1,1 +1,6 @@
 
+{
+  "appId": "com.example.mywishes",
+  "appName": "My Wishes",
+  "webDir": "www"
+}
