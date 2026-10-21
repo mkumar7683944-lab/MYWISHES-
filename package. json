@@ -1,1 +1,17 @@
 
+{
+  "name": "my-wishes",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personalized wishes app",
+  "scripts": {
+    "build": "node -e \"console.log('Preparing My Wishes')\""
+  },
+  "dependencies": {
+    "@capacitor/core": "^6.2.0",
+    "@capacitor/android": "^6.2.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.2.0"
+  }
+}
