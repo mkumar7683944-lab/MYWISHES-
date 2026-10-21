@@ -1,1 +1,234 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+ content="width=device-width, initial-scale=1.0">
+<title>My Wishes</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 20px 14px;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #ffe4ef, #e9ddff);
+  color: #64204f;
+}
+
+.app {
+  max-width: 430px;
+  margin: auto;
+  text-align: center;
+}
+
+h1 {
+  color: #c02675;
+  margin-bottom: 8px;
+}
+
+.panel, .card {
+  background: white;
+  border-radius: 22px;
+  padding: 20px;
+  margin-top: 18px;
+  box-shadow: 0 8px 25px #8d477522;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 13px;
+  margin: 8px 0;
+  border-radius: 12px;
+  font-size: 16px;
+}
+
+input, select {
+  border: 1px solid #e5b5d3;
+  background: #fffafd;
+  color: #54213f;
+}
+
+button {
+  border: none;
+  background: #db2777;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.secondary {
+  background: #7c3aed;
+}
+
+#photo {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 5px solid #f9a8d4;
+  display: none;
+  margin: 18px auto;
+}
+
+.card {
+  background: linear-gradient(150deg, #fff7fb, #fff);
+  border: 2px solid #fbcfe8;
+}
+
+#wishTitle {
+  color: #be185d;
+  font-size: 27px;
+}
+
+#wishMessage {
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.small {
+  font-size: 12px;
+  color: #87536f;
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+  <h1>💖 My Wishes 💖</h1>
+  <p>Create a beautiful wish for someone special</p>
+
+  <div class="panel">
+    <input id="name" type="text"
+      placeholder="Enter person's name">
+
+    <select id="occasion">
+      <option value="Birthday">🎂 Birthday</option>
+      <option value="Anniversary">💑 Anniversary</option>
+      <option value="Love">❤️ Love Wishes</option>
+      <option value="Diwali">🪔 Happy Diwali</option>
+      <option value="New Year">🎆 Happy New Year</option>
+      <option value="Friendship">🤗 Friendship</option>
+      <option value="Congratulations">🎉 Congratulations</option>
+      <option value="Good Morning">☀️ Good Morning</option>
+      <option value="Good Night">🌙 Good Night</option>
+      <option value="Best Wishes">🌸 Best Wishes</option>
+    </select>
+
+    <input id="photoInput" type="file"
+      accept="image/*">
+
+    <button onclick="makeWish()">Create My Wish ✨</button>
+  </div>
+
+  <div class="card" id="greeting">
+    <div id="wishTitle">✨ Your Greeting ✨</div>
+    <img id="photo" alt="Selected photo">
+    <h2 id="wishName">Dear Friend ❤️</h2>
+    <p id="wishMessage">
+      Your beautiful personalized message will appear here.
+    </p>
+    <p>💖 With love and best wishes 💖</p>
+  </div>
+
+  <button class="secondary" onclick="downloadWish()">
+    Save Greeting as Image 📥
+  </button>
+
+  <p class="small">
+    Choose a photo, enter a name, and create your greeting.
+  </p>
+</div>
+
+<script>
+const messages = {
+  "Birthday":
+    "May your birthday be full of happiness, love, laughter and beautiful memories. May all your dreams come true! 🎂",
+  "Anniversary":
+    "Wishing you a lifetime of love, joy and togetherness. May your bond grow stronger every day! 💑",
+  "Love":
+    "You make life more beautiful. Sending you love, happiness and countless reasons to smile! ❤️",
+  "Diwali":
+    "May the festival of lights fill your home with peace, prosperity and happiness. Happy Diwali! 🪔",
+  "New Year":
+    "May this new year bring fresh hopes, new opportunities, good health and endless happiness! 🎆",
+  "Friendship":
+    "A wonderful friend makes every moment special. Thank you for filling life with smiles and memories! 🤗",
+  "Congratulations":
+    "Congratulations on your achievement! May this success be the beginning of many more wonderful things! 🎉",
+  "Good Morning":
+    "Good morning! May your day begin with a smile and bring you peace, positivity and success! ☀️",
+  "Good Night":
+    "May your night be peaceful and your dreams be beautiful. Sleep well and wake up smiling! 🌙",
+  "Best Wishes":
+    "Wishing you happiness, good health, success and many beautiful moments today and always! 🌸"
+};
+
+const nameInput = document.getElementById("name");
+const occasionInput = document.getElementById("occasion");
+const photoInput = document.getElementById("photoInput");
+const photo = document.getElementById("photo");
+
+photoInput.addEventListener("change", function() {
+  const file = this.files && this.files[0];
+  if (!file) return;
+
+  if (photo.src.startsWith("blob:")) {
+    URL.revokeObjectURL(photo.src);
+  }
+
+  photo.src = URL.createObjectURL(file);
+  photo.style.display = "block";
+});
+
+function makeWish() {
+  const name = nameInput.value.trim() || "Dear Friend";
+  const occasion = occasionInput.value;
+
+  document.getElementById("wishTitle").textContent =
+    "✨ Happy " + occasion + "! ✨";
+
+  document.getElementById("wishName").textContent =
+    "Dear " + name + " ❤️";
+
+  document.getElementById("wishMessage").textContent =
+    messages[occasion];
+
+  document.getElementById("greeting").scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+}
+
+async function downloadWish() {
+  makeWish();
+
+  if (!window.html2canvas) {
+    alert("Image tool is not loaded. Connect to the internet and reload.");
+    return;
+  }
+
+  try {
+    const canvas = await html2canvas(
+      document.getElementById("greeting"),
+      { scale: 2, useCORS: true }
+    );
+
+    const link = document.createElement("a");
+    link.download = "My-Wish.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  } catch (error) {
+    alert("Could not save the image. Please try again.");
+  }
+}
+</script>
+
+<script
+ src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
+</script>
+</body>
+</html>
